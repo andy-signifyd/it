@@ -1,2 +1,2 @@
 # it
-Contains IT related scripts
+Contains IT scripts
