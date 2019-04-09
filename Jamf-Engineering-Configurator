@@ -1,0 +1,125 @@
+# Installs all DevOps dependencies
+
+##########THIS SECTION INSTALLS XCODE CLI##########
+
+
+# XCODE Install
+xcode-select --install
+
+
+##########THIS SECTION INSTALLS ALL BREW AND CASKS##########
+
+
+# Check for Homebrew, install if we don't have it
+if test ! $(which brew); then
+    echo "Installing homebrew..."
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+# Checks for Brew Updates
+brew update
+
+# Install Bash 4
+brew install bash
+
+# Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
+brew install findutils
+
+#Installs all Brew dependencies in one shot
+PACKAGES=(
+bash-completion
+bower
+git
+grpc
+jq
+mysql@5.6
+node
+protobuf
+pyenv
+pyenv-virtualenv
+python
+python3
+wget
+)
+
+#Installs all packages
+brew install ${PACKAGES[@]}
+
+#Cleanup
+echo "Cleaning up..."
+brew cleanup
+
+# Installs Brew Cask
+brew install cask
+
+CASKS=(
+github
+mysqlworkbench
+)
+
+# Installs CASKS
+echo "Installing cask apps..."
+brew cask install ${CASKS[@]}
+
+## Brew Cleanup
+brew cleanup
+brew cask cleanup
+
+
+##########END OF ALL BREW AND CASK INSTALLS##########
+
+
+##########Runs all other dependencies(Python,JAVA, CASSANDRA, NPM)##########
+
+
+# Python 2
+pip install --upgrade pip setuptools
+pip install awscli boto3
+
+
+# Python 3
+pip3 install --upgrade pip setuptools wheel twine
+# development tools
+pip3 install --upgrade flake8 pipenv pycodestyle yapf
+# database access: mysql, redshift, casssandra...
+pip3 install --upgrade psycopg2 PyMySQL cassandra-driver PyHive
+# libraries we use
+pip3 install --upgrade \
+    absl-py \
+    awscli \
+    boto3 \
+    bumpversion \
+    datadog \
+    GitPython \
+    grpcio \
+    grpcio-tools \
+    jinja2 \
+    loggly-python-handler \
+    marshmallow \
+    marshmallow_polyfield \
+    numpy \
+    paramiko \
+    pandas \
+    pexpect \
+    pystache \
+    PyYAML \
+    requests \
+    scipy \
+    timezonefinder \
+    tqdm \
+    # end
+
+# Java
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 8.0.191-oracle
+sdk install maven 3.5.2
+
+# cqlsh (Cassandra)
+pip2 install cqlsh
+
+# node/angular
+npm install -g n
+n 8.2.1
+
+echo "All dependencies have been installed! Cheers!"
